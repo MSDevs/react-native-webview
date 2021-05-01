@@ -264,7 +264,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
 
   @ReactProp(name = "ignoreOfflineError")
   public void setIgnoreOfflineError(WebView view, boolean ignore) {
-    view.setIgnoreOfflineError(ignore);
+    ((RNCWebView) view).getRNCWebViewClient().setIgnoreOfflineError(ignore);
   }
 
   @ReactProp(name = "cacheEnabled")
