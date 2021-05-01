@@ -262,6 +262,11 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     view.setVerticalScrollBarEnabled(enabled);
   }
 
+  @ReactProp(name = "ignoreOfflineError")
+  public void setIgnoreOfflineError(WebView view, boolean ignore) {
+    view.setIgnoreOfflineError(ignore);
+  }
+
   @ReactProp(name = "cacheEnabled")
   public void setCacheEnabled(WebView view, boolean enabled) {
     if (enabled) {
@@ -805,9 +810,14 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     ReadableArray mUrlPrefixesForDefaultIntent;
     protected RNCWebView.ProgressChangedFilter progressChangedFilter = null;
     protected @Nullable String ignoreErrFailedForThisURL = null;
+    protected boolean ignoreOfflineError = false;
 
     public void setIgnoreErrFailedForThisURL(@Nullable String url) {
       ignoreErrFailedForThisURL = url;
+    }
+
+    public void setIgnoreOfflineError(boolean ignore) {
+      ignoreOfflineError = ignore;
     }
 
     @Override
@@ -971,6 +981,10 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
         // https://bugs.chromium.org/p/chromium/issues/detail?id=1050635
         // This entire commit should be reverted once this bug is resolved in chromium.
         setIgnoreErrFailedForThisURL(null);
+        return;
+      }
+
+      if (ignoreOfflineError && errorCode == -2) {
         return;
       }
 
